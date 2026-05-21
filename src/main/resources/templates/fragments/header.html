@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${title}">Agentic IDE Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .card-border-slate   { border-left-color: #94a3b8; }
+    .card-border-indigo  { border-left-color: #6366f1; }
+    .card-border-emerald { border-left-color: #10b981; }
+    .card-border-amber   { border-left-color: #f59e0b; }
+    .card-border-rose    { border-left-color: #f43f5e; }
+    .card-border-sky     { border-left-color: #0ea5e9; }
+  </style>
+</head>
+<body>
+<nav th:fragment="nav" class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-lg">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold tracking-tight">Agentic IDE Demo</a>
+    <div class="flex gap-5 text-sm font-medium">
+      <a href="/" class="hover:opacity-80">Notes</a>
+      <a href="/notes/new" class="hover:opacity-80">New</a>
+      <a href="/api/notes" class="hover:opacity-80" target="_blank">API</a>
+      <a href="/h2-console" class="hover:opacity-80" target="_blank">H2</a>
+    </div>
+  </div>
+</nav>
+</body>
+</html>

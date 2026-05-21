@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Agentic IDE Demo')}"></head>
+<body class="bg-slate-50 min-h-screen">
+<nav th:replace="~{fragments/header :: nav}"></nav>
+
+<main class="max-w-6xl mx-auto px-6 py-10">
+
+  <header class="mb-10">
+    <h1 class="text-4xl font-bold gradient-text">Notes</h1>
+    <p class="text-slate-500 mt-2">Base code for the Agentic IDE comparison demo</p>
+  </header>
+
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="text-slate-500 text-sm font-medium">Total notes</div>
+      <div class="text-4xl font-bold text-slate-900 mt-2" th:text="${stats.total}">0</div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="text-slate-500 text-sm font-medium">Created today</div>
+      <div class="text-4xl font-bold text-indigo-600 mt-2" th:text="${stats.today}">0</div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="text-slate-500 text-sm font-medium">Color tags</div>
+      <div class="text-4xl font-bold text-purple-600 mt-2" th:text="${stats.byColor.size()}">0</div>
+    </div>
+  </section>
+
+  <section class="mb-6 flex items-center justify-between">
+    <h2 class="text-2xl font-semibold text-slate-900">Recent notes</h2>
+    <a href="/notes/new"
+       class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm transition">
+      + New Note
+    </a>
+  </section>
+
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <article th:each="note : ${notes}"
+             th:classappend="${'card-border-' + note.color}"
+             class="bg-white rounded-2xl shadow-sm border border-slate-200 border-l-4 p-5 hover:shadow-md hover:-translate-y-0.5 transition">
+      <a th:href="@{|/notes/${note.id}|}" class="block">
+        <h3 class="font-semibold text-slate-900 truncate" th:text="${note.title}">title</h3>
+        <p class="text-slate-600 text-sm mt-2 line-clamp-3" th:text="${note.content}">content</p>
+        <div class="text-xs text-slate-400 mt-4 flex items-center justify-between">
+          <span th:text="${#temporals.format(note.updatedAt, 'yyyy-MM-dd HH:mm')}">date</span>
+          <span class="px-2 py-0.5 bg-slate-100 rounded-full text-slate-500"
+                th:text="${note.color}">color</span>
+        </div>
+      </a>
+    </article>
+  </section>
+
+  <section th:if="${notes.isEmpty()}" class="text-center py-16 text-slate-400">
+    No notes yet. Click "New Note" to create your first one.
+  </section>
+
+</main>
+</body>
+</html>
