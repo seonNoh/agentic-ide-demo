@@ -27,11 +27,11 @@ Then open:
 
 | Path | Purpose |
 | --- | --- |
-| `http://localhost:8080/` | Notes dashboard (Thymeleaf UI) |
-| `http://localhost:8080/notes/new` | Create a new note |
-| `http://localhost:8080/api/notes` | REST API |
-| `http://localhost:8080/api/stats` | Stats JSON |
-| `http://localhost:8080/h2-console` | H2 console (JDBC URL: `jdbc:h2:mem:notes`) |
+| `http://localhost:8090/` | Notes dashboard (Thymeleaf UI) |
+| `http://localhost:8090/notes/new` | Create a new note |
+| `http://localhost:8090/api/notes` | REST API |
+| `http://localhost:8090/api/stats` | Stats JSON |
+| `http://localhost:8090/h2-console` | H2 console (JDBC URL: `jdbc:h2:mem:notes`) |
 
 Run tests:
 
