@@ -1,0 +1,41 @@
+{
+  "repo": "seon-labs/agentic-ide-demo",
+  "description": "Kotlin and Spring Boot note application for comparing four agentic IDE workflows on one JVM codebase.",
+  "website": "https://github.com/seonNoh/agentic-ide-demo",
+  "topics": ["lab", "kotlin", "spring-boot", "spring-data-jpa", "thymeleaf", "h2", "gradle", "agentic-ide", "jvm"],
+  "units": {
+    "has_issues": true,
+    "has_wiki": true,
+    "has_projects": true,
+    "has_pull_requests": true,
+    "has_releases": true,
+    "has_packages": false,
+    "has_actions": false,
+    "has_code": true
+  },
+  "merge": {
+    "allow_merge_commits": true,
+    "allow_squash_merge": true,
+    "allow_rebase": true,
+    "allow_rebase_explicit": true,
+    "allow_fast_forward_only_merge": false,
+    "allow_manual_merge": false,
+    "default_merge_style": "merge",
+    "default_delete_branch_after_merge": false,
+    "default_allow_maintainer_edit": false
+  },
+  "rationale": {
+    "description": "The description states the Kotlin and Spring Boot note application purpose and the four-agent comparison scope.",
+    "website": "GitHub is the configured push mirror and is linked as the public counterpart.",
+    "topics": "lab is retained from GitHub; the remaining topics describe the build, runtime, persistence, UI, and comparison scope in the source tree.",
+    "has_issues": "The source repository has issues enabled, and the Gitea repository is the working source.",
+    "has_wiki": "The source repository has wiki enabled, so the Gitea wiki unit remains available.",
+    "has_projects": "The source repository has projects enabled, so the Gitea projects unit remains available.",
+    "has_pull_requests": "The source repository supports pull requests, so Gitea keeps review enabled.",
+    "has_releases": "The source repository exposes release and tag units even though it currently has no tags.",
+    "has_packages": "No package publication configuration is present in the source tree.",
+    "has_actions": "The source has no workflow files or runs; Gitea Actions stays disabled.",
+    "has_code": "The repository contains Kotlin, HTML, Gradle, and test source files.",
+    "merge": "Gitea keeps the existing merge options because GitHub exposes merge, squash, and rebase options; no branch protection was observed."
+  }
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="aa-title aa-subtitle">
+  <title id="aa-title">Agentic IDE demo application architecture</title>
+  <desc id="aa-subtitle">A browser reaches Spring Boot controllers, services, and the H2 note database.</desc>
+  <style>
+    .aa-bg{fill:#0d1117}.aa-card{fill:url(#aa-s);stroke:#252d38;stroke-width:1}.aa-lead{fill:url(#aa-sl);stroke:#33404f;stroke-width:1}.aa-inner{fill:#1e2530;stroke:#252d38;stroke-width:1}.aa-text{font:600 16px Pretendard,system-ui,sans-serif;fill:#f0f6fc}.aa-sub{font:400 11.5px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-name{font:500 13px Pretendard,system-ui,sans-serif;fill:#c3ccd6}.aa-label{font:400 11px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-value{font:400 10.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#69717a}.aa-badge{font:400 9.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#7c9fff}.aa-flow{fill:none;stroke:#7c9fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 6;animation:aa-dash 2s linear infinite}.aa-top{stroke:rgba(255,255,255,.05);stroke-width:1}.aa-glow{filter:url(#aa-gl)}
+    @keyframes aa-dash{to{stroke-dashoffset:-22}}@media (prefers-reduced-motion:reduce){.aa-flow{animation:none}}
+  </style>
+  <defs>
+    <filter id="aa-sh" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="-3" dy="10" stdDeviation="9" flood-color="#000" flood-opacity=".5"/></filter>
+    <filter id="aa-shl" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="-4" dy="13" stdDeviation="11" flood-color="#000" flood-opacity=".58"/></filter>
+    <filter id="aa-gl" x="-60%" y="-90%" width="220%" height="280%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#7c9fff" flood-opacity=".4"/><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>
+    <linearGradient id="aa-s" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#1b222c"/><stop offset="1" stop-color="#151b23"/></linearGradient>
+    <linearGradient id="aa-sl" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#222b38"/><stop offset="1" stop-color="#19202a"/></linearGradient>
+    <marker id="aa-ta" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="#7c9fff"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="#0d1117"/>
+  <text class="aa-text" x="32" y="38">Agentic IDE demo application architecture</text>
+  <text class="aa-sub" x="32" y="58">Spring Boot MVC · REST API · H2 in-memory persistence</text>
+  <g filter="url(#aa-sh)"><rect class="aa-card" x="32" y="144" width="200" height="240" rx="12"/><path class="aa-top" d="M44 145H220"/><text class="aa-name" x="56" y="180">Browser</text><text class="aa-label" x="56" y="208">user-facing entry</text><rect class="aa-inner" x="56" y="232" width="152" height="34" rx="8"/><text class="aa-label" x="70" y="253">Thymeleaf pages</text><rect class="aa-inner" x="56" y="274" width="152" height="34" rx="8"/><text class="aa-label" x="70" y="295">JSON requests</text><text class="aa-badge" x="56" y="360">PORT 8090</text></g>
+  <path class="aa-flow" d="M232 264H280" marker-end="url(#aa-ta)"/>
+  <g filter="url(#aa-shl)"><rect class="aa-lead aa-glow" x="280" y="128" width="240" height="272" rx="12"/><path class="aa-top" d="M292 129H508"/><text class="aa-text" x="304" y="168">Spring Boot</text><text class="aa-sub" x="304" y="188">controllers and services</text><rect class="aa-inner" x="304" y="216" width="192" height="34" rx="8"/><text class="aa-label" x="318" y="237">NoteController</text><rect class="aa-inner" x="304" y="258" width="192" height="34" rx="8"/><text class="aa-label" x="318" y="279">NoteApiController</text><rect class="aa-inner" x="304" y="300" width="192" height="34" rx="8"/><text class="aa-label" x="318" y="321">NoteService</text><text class="aa-badge" x="304" y="368">KOTLIN 1.9</text></g>
+  <path class="aa-flow" d="M520 264H568" marker-end="url(#aa-ta)"/>
+  <g filter="url(#aa-sh)"><rect class="aa-card" x="568" y="96" width="360" height="336" rx="12"/><path class="aa-top" d="M584 97H912"/><text class="aa-name" x="592" y="132">Persistence and statistics</text><rect class="aa-inner" x="592" y="184" width="312" height="88" rx="8"/><text class="aa-name" x="612" y="214">NoteRepository</text><text class="aa-label" x="612" y="238">Spring Data JPA</text><text class="aa-value" x="612" y="258">Note(title, content, createdAt)</text><rect class="aa-inner" x="592" y="296" width="312" height="88" rx="8"/><text class="aa-name" x="612" y="326">H2 database</text><text class="aa-label" x="612" y="350">data.sql seed notes</text><text class="aa-label" x="612" y="370">StatsService → /api/stats</text></g>
+  <text class="aa-label" x="32" y="488">One JVM codebase · four IDE workflows · one note domain</text><text class="aa-value" x="928" y="488" text-anchor="end">Spring Boot 3.5</text>
+</svg>

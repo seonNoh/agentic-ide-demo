@@ -1,85 +1,104 @@
-# Agentic IDE Demo
+# agentic-ide-demo
 
-Base project for a side-by-side comparison talk on four agentic IDEs:
+[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
 
-- **Kiro** (AWS) — spec-driven, agent hooks
-- **GitHub Copilot in VS Code** — agent + inline + next edit + cloud agent
-- **Google Antigravity** — multi-agent, artifacts, manager view
-- **JetBrains Junie** — IDE-native, three modes (Auto / Think / Brave)
+## Overview
 
-All four tools are exercised against this same codebase using the same model (Claude Opus 4.6 or 4.7) so that the differences observed are purely from the agent harness, not the model.
+`agentic-ide-demo` is a small Kotlin and Spring Boot application for comparing four agentic IDEs against the same JVM codebase. It models a note service with a Thymeleaf dashboard, a JSON API, an H2 in-memory database, and a statistics endpoint. The repository also contains the presentation scripts used to run the comparison scenarios.
 
-## Stack
+The application uses Kotlin 1.9, Java 21, Spring Boot 3.5, Spring Data JPA, Thymeleaf, H2, Gradle Kotlin DSL, and JUnit 5. The four comparison targets are Kiro, GitHub Copilot in VS Code, Google Antigravity, and JetBrains Junie.
 
-- Kotlin 1.9 + Java 21
-- Spring Boot 3.5 (Web, Data JPA, Thymeleaf, Validation)
-- H2 in-memory database
-- Gradle (Kotlin DSL)
-- JUnit 5
+![Application architecture](docs/svg/application-architecture.svg)
+
+## Repository layout
+
+```text
+src/main/kotlin/com/seonology/demo/
+  AgenticIdeDemoApplication.kt
+  note/   # entity, repository, service, Thymeleaf controller, REST controller
+  stats/  # statistics service and JSON controller
+src/main/resources/
+  application.properties
+  data.sql
+  templates/  # index, new, detail, and shared header
+src/test/kotlin/com/seonology/demo/
+  AgenticIdeDemoApplicationTests.kt
+  note/  # REST and service tests
+```
 
 ## Quick start
+
+Clone the repository and enter the working tree.
+
+```bash
+git clone https://git.seonology.com/seon-labs/agentic-ide-demo.git
+cd agentic-ide-demo
+```
+
+Start the application with the Gradle Wrapper.
 
 ```bash
 ./gradlew bootRun
 ```
 
-Then open:
-
-| Path | Purpose |
-| --- | --- |
-| `http://localhost:8090/` | Notes dashboard (Thymeleaf UI) |
-| `http://localhost:8090/notes/new` | Create a new note |
-| `http://localhost:8090/api/notes` | REST API |
-| `http://localhost:8090/api/stats` | Stats JSON |
-| `http://localhost:8090/h2-console` | H2 console (JDBC URL: `jdbc:h2:mem:notes`) |
-
-Run tests:
+Run the automated tests.
 
 ```bash
 ./gradlew test
 ```
 
-## Layout
+The server listens on `http://localhost:8090`. The dashboard is available at `/`, note creation at `/notes/new`, the REST collection at `/api/notes`, statistics at `/api/stats`, and the H2 console at `/h2-console` with JDBC URL `jdbc:h2:mem:notes`.
 
-```
-src/main/kotlin/com/seonology/demo/
-  AgenticIdeDemoApplication.kt
-  note/
-    Note.kt              # JPA entity
-    NoteRepository.kt
-    NoteService.kt
-    NoteController.kt    # Thymeleaf
-    NoteApiController.kt # REST
-  stats/
-    StatsService.kt
-    StatsController.kt
-src/main/resources/
-  application.properties
-  data.sql               # seed notes
-  templates/
-    fragments/header.html
-    index.html
-    new.html
-    detail.html
-```
+## Application structure
 
-## Demo scripts
+![Request flow](docs/svg/request-flow.svg)
 
-See language-specific demo scripts:
+`AgenticIdeDemoApplication` starts Spring Boot. `NoteService` owns note creation, lookup, update, and deletion through `NoteRepository`. `NoteController` renders Thymeleaf pages, while `NoteApiController` exposes JSON endpoints. `StatsService` calculates the note count and aggregate word count for `StatsController`.
 
-- [DEMO.ko.md](DEMO.ko.md) — 한국어
-- [DEMO.ja.md](DEMO.ja.md) — 日本語
+The database is created from the JPA model at startup. `src/main/resources/data.sql` supplies the sample notes that appear in the dashboard. `spring.jpa.open-in-view=false` keeps persistence access inside the service boundary.
 
-Each script contains four "strength" scenarios (one per tool) plus one cross-tool comparison scenario, with prompts ready to copy.
+## Demo scenarios
 
-## Why this base
+![IDE comparison scenarios](docs/svg/demo-scenarios.svg)
 
-Small enough to read in five minutes, large enough to exercise:
+The scripts use the same application to compare four workflows:
 
-- Multi-file edits (controller + service + entity + template + test)
-- Database schema change (add a column)
-- Refactoring (split a service)
-- UI change with immediate visual feedback (Thymeleaf + Tailwind)
-- REST API change with breaking diff
+- Kiro: specification-driven work for a tag feature.
+- GitHub Copilot: Agent mode, Inline, Next Edit Suggestions, and Cloud agent in one task.
+- Google Antigravity: three independent changes delegated through Manager View.
+- JetBrains Junie: the same refactoring task in Auto, Think, and Brave modes.
 
-That set covers the corners of each tool's strengths.
+The scripts also define a shared favorite-feature exercise and a small evaluation sheet. Read [DEMO.ko.md](DEMO.ko.md) or [DEMO.ja.md](DEMO.ja.md) for the copy-ready prompts.
+
+## HTTP endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/` | Render the note dashboard |
+| `GET` | `/notes/new` | Render the note form |
+| `POST` | `/notes` | Create a note and return to the dashboard |
+| `GET` | `/notes/{id}` | Render one note |
+| `GET` | `/api/notes` | Return all notes as JSON |
+| `GET` | `/api/notes/{id}` | Return one note as JSON |
+| `POST` | `/api/notes` | Create a note from JSON |
+| `PUT` | `/api/notes/{id}` | Update a note from JSON |
+| `DELETE` | `/api/notes/{id}` | Delete a note |
+| `GET` | `/api/stats` | Return note count and word count |
+
+## GitHub and Gitea
+
+![Repository roles](docs/svg/repository-roles.svg)
+
+The source repository is `https://git.seonology.com/seon-labs/agentic-ide-demo`. GitHub remains available at `https://github.com/seonNoh/agentic-ide-demo` as the read-only push mirror. Both repositories currently expose the `main` branch at commit `b1dd56bc2045d54a4f1af43958753843e38be883`; no tags are present.
+
+## Operations
+
+Gradle resolves the declared dependencies from Maven Central. The application uses an in-memory H2 database, so restarting the process restores the seed data. Stop a running server with `Ctrl+C`, then use `./gradlew test` before sharing a change.
+
+## Related
+
+- [DEMO.ko.md](DEMO.ko.md) — copy-ready Korean presentation script.
+- [DEMO.ja.md](DEMO.ja.md) — copy-ready Japanese presentation script.
+- [Spring Boot documentation](https://docs.spring.io/spring-boot/)
+- [Kotlin documentation](https://kotlinlang.org/docs/home.html)
+- [Gradle Kotlin DSL documentation](https://docs.gradle.org/current/userguide/kotlin_dsl.html)

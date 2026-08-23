@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="aa-ko-title aa-ko-subtitle">
+  <title id="aa-ko-title">에이전트형 IDE 데모 애플리케이션 구조</title>
+  <desc id="aa-ko-subtitle">A browser reaches Spring Boot controllers, services, and the H2 note database.</desc>
+  <style>
+    .aa-ko-bg{fill:#0d1117}.aa-ko-card{fill:url(#aa-ko-s);stroke:#252d38;stroke-width:1}.aa-ko-lead{fill:url(#aa-ko-sl);stroke:#33404f;stroke-width:1}.aa-ko-inner{fill:#1e2530;stroke:#252d38;stroke-width:1}.aa-ko-text{font:600 16px Pretendard,system-ui,sans-serif;fill:#f0f6fc}.aa-ko-sub{font:400 11.5px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-ko-name{font:500 13px Pretendard,system-ui,sans-serif;fill:#c3ccd6}.aa-ko-label{font:400 11px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-ko-value{font:400 10.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#69717a}.aa-ko-badge{font:400 9.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#7c9fff}.aa-ko-flow{fill:none;stroke:#7c9fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 6;animation:aa-ko-dash 2s linear infinite}.aa-ko-top{stroke:rgba(255,255,255,.05);stroke-width:1}.aa-ko-glow{filter:url(#aa-ko-gl)}
+    @keyframes aa-ko-dash{to{stroke-dashoffset:-22}}@media (prefers-reduced-motion:reduce){.aa-ko-flow{animation:none}}
+  </style>
+  <defs>
+    <filter id="aa-ko-sh" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="-3" dy="10" stdDeviation="9" flood-color="#000" flood-opacity=".5"/></filter>
+    <filter id="aa-ko-shl" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="-4" dy="13" stdDeviation="11" flood-color="#000" flood-opacity=".58"/></filter>
+    <filter id="aa-ko-gl" x="-60%" y="-90%" width="220%" height="280%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#7c9fff" flood-opacity=".4"/><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>
+    <linearGradient id="aa-ko-s" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#1b222c"/><stop offset="1" stop-color="#151b23"/></linearGradient>
+    <linearGradient id="aa-ko-sl" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#222b38"/><stop offset="1" stop-color="#19202a"/></linearGradient>
+    <marker id="aa-ko-ta" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="#7c9fff"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="#0d1117"/>
+  <text class="aa-ko-text" x="32" y="38">에이전트형 IDE 데모 애플리케이션 구조</text>
+  <text class="aa-ko-sub" x="32" y="58">Spring Boot MVC · REST API · H2 인메모리 영속성</text>
+  <g filter="url(#aa-ko-sh)"><rect class="aa-ko-card" x="32" y="144" width="200" height="240" rx="12"/><path class="aa-ko-top" d="M44 145H220"/><text class="aa-ko-name" x="56" y="180">브라우저</text><text class="aa-ko-label" x="56" y="208">사용자 진입점</text><rect class="aa-ko-inner" x="56" y="232" width="152" height="34" rx="8"/><text class="aa-ko-label" x="70" y="253">Thymeleaf 페이지</text><rect class="aa-ko-inner" x="56" y="274" width="152" height="34" rx="8"/><text class="aa-ko-label" x="70" y="295">JSON 요청</text><text class="aa-ko-badge" x="56" y="360">포트 8090</text></g>
+  <path class="aa-ko-flow" d="M232 264H280" marker-end="url(#aa-ko-ta)"/>
+  <g filter="url(#aa-ko-shl)"><rect class="aa-ko-lead aa-ko-glow" x="280" y="128" width="240" height="272" rx="12"/><path class="aa-ko-top" d="M292 129H508"/><text class="aa-ko-text" x="304" y="168">Spring Boot</text><text class="aa-ko-sub" x="304" y="188">컨트롤러와 서비스</text><rect class="aa-ko-inner" x="304" y="216" width="192" height="34" rx="8"/><text class="aa-ko-label" x="318" y="237">NoteController</text><rect class="aa-ko-inner" x="304" y="258" width="192" height="34" rx="8"/><text class="aa-ko-label" x="318" y="279">NoteApiController</text><rect class="aa-ko-inner" x="304" y="300" width="192" height="34" rx="8"/><text class="aa-ko-label" x="318" y="321">NoteService</text><text class="aa-ko-badge" x="304" y="368">KOTLIN 1.9</text></g>
+  <path class="aa-ko-flow" d="M520 264H568" marker-end="url(#aa-ko-ta)"/>
+  <g filter="url(#aa-ko-sh)"><rect class="aa-ko-card" x="568" y="96" width="360" height="336" rx="12"/><path class="aa-ko-top" d="M584 97H912"/><text class="aa-ko-name" x="592" y="132">영속성과 통계</text><rect class="aa-ko-inner" x="592" y="184" width="312" height="88" rx="8"/><text class="aa-ko-name" x="612" y="214">NoteRepository</text><text class="aa-ko-label" x="612" y="238">Spring Data JPA</text><text class="aa-ko-value" x="612" y="258">Note(title, content, createdAt)</text><rect class="aa-ko-inner" x="592" y="296" width="312" height="88" rx="8"/><text class="aa-ko-name" x="612" y="326">H2 데이터베이스</text><text class="aa-ko-label" x="612" y="350">data.sql 시드 노트</text><text class="aa-ko-label" x="612" y="370">StatsService → /api/stats</text></g>
+  <text class="aa-ko-label" x="32" y="488">하나의 JVM 코드베이스 · 네 가지 IDE 흐름 · 하나의 노트 도메인</text><text class="aa-ko-value" x="928" y="488" text-anchor="end">Spring Boot 3.5</text>
+</svg>
