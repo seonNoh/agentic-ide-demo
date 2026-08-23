@@ -125,6 +125,16 @@ def check_svg() -> None:
                 fail(f"{name} contains attribution or emoji")
             if element_signature(root) != element_signature(english_root):
                 fail(f"{name} changed SVG structure or coordinates")
+            if stem == "request-flow" and suffix == ".ko":
+                if "or form submit" in text or "Controller → service → repository keeps responsibilities explicit" in text:
+                    fail(f"{name} retains untranslated English prose")
+                if "또는 폼 제출" not in text or "컨트롤러 → 서비스 → 리포지토리로 책임을 분명하게 유지" not in text:
+                    fail(f"{name} lacks the approved Korean prose")
+            if stem == "request-flow" and suffix == ".ja":
+                if "or form submit" in text or "Controller → service → repository keeps responsibilities explicit" in text:
+                    fail(f"{name} retains untranslated English prose")
+                if "またはフォーム送信" not in text or "コントローラ → サービス → リポジトリで責務を明確にする" not in text:
+                    fail(f"{name} lacks the approved Japanese prose")
     if len(list(SVG_DIR.glob("*.svg"))) != 12:
         fail("SVG directory must contain exactly 12 files")
 
