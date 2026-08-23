@@ -31,6 +31,10 @@ LOCALIZED_DESCS = {
     ("repository-roles", ".ko"): "Gitea가 소스 저장소이고 GitHub가 push 미러를 받는다.",
     ("repository-roles", ".ja"): "Gitea がソースリポジトリで、GitHub が push ミラーを受け取る。",
 }
+LOCALIZED_TITLES = {
+    ("repository-roles", ".ko"): "Gitea와 GitHub 저장소 역할",
+    ("repository-roles", ".ja"): "Gitea と GitHub のリポジトリの役割",
+}
 TAILWIND = ("#0f172a", "#1e293b", "#38bdf8", "#a78bfa", "#f472b6", "#34d399", "#fbbf24")
 EMOJI = re.compile(r"[\U0001F000-\U0001FAFF\u2600-\u27BF]")
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
@@ -139,6 +143,10 @@ def check_svg() -> None:
                 desc_text = next((element.text or "" for element in root.iter() if element.tag.rsplit("}", 1)[-1] == "desc"), "")
                 if desc_text != LOCALIZED_DESCS[(stem, suffix)]:
                     fail(f"{name} has an untranslated or unexpected localized desc")
+                if stem == "repository-roles":
+                    title_text = next((element.text or "" for element in root.iter() if element.tag.rsplit("}", 1)[-1] == "title"), "")
+                    if title_text != LOCALIZED_TITLES[(stem, suffix)]:
+                        fail(f"{name} has an untranslated or unexpected localized title")
             if stem == "request-flow":
                 for identifier in ("NoteApiController", "NoteService", "NoteRepository"):
                     if identifier not in text:
