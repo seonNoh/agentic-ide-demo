@@ -4,7 +4,7 @@
 
 ## 概要
 
-`agentic-ide-demo` は、同じ JVM コードベースで4つのエージェント型 IDE を比較する Kotlin・Spring Boot アプリケーションだ。ノートサービスには Thymeleaf のダッシュボードと JSON API がある。データは H2 インメモリデータベースに保存し、統計エンドポイントも提供する。比較シナリオを実行する発表用スクリプトも収録している。
+`agentic-ide-demo` は、Java 仮想マシン（JVM）の同じコードベース上で4つのエージェント型 IDE を比較する Kotlin・Spring Boot アプリケーションだ。ノートサービスには Thymeleaf のダッシュボードと JSON API がある。アプリケーションはデータを H2 インメモリデータベースに保存する。また、統計エンドポイントも提供する。比較シナリオを実行する発表用スクリプトも収録している。
 
 使用技術は次のとおりだ。
 
@@ -39,9 +39,11 @@ src/test/kotlin/com/seonology/demo/
 
 ## すぐに始める
 
-リポジトリをクローンして作業ディレクトリへ移動する。
+Java 21 と Git が必要だ。両方を確認してから、リポジトリをクローンして作業ディレクトリへ移動する。
 
 ```bash
+java -version
+git --version
 git clone https://git.seonology.com/seon-labs/agentic-ide-demo.git
 cd agentic-ide-demo
 ```
@@ -62,9 +64,9 @@ Gradle Wrapper でアプリケーションを起動する。
 
 ## アプリケーション構成
 
-![リクエストの流れ](docs/svg/request-flow.ja.svg)
+![ノートのリクエストフロー](docs/svg/request-flow.ja.svg)
 
-`AgenticIdeDemoApplication` が Spring Boot を起動する。`NoteService` は `NoteRepository` を通じてノートの作成、参照、更新、削除を担当する。`NoteController` は Thymeleaf ページを描画し、`NoteApiController` は JSON エンドポイントを公開する。`StatsService` はノート数と総単語数を計算して `StatsController` に渡す。
+`AgenticIdeDemoApplication` が Spring Boot を起動する。`NoteService` は `NoteRepository` を通じてノートの作成、参照、更新、削除を担当する。`NoteController` は Thymeleaf ページを描画し、`NoteApiController` は JSON エンドポイントを公開する。`StatsService` はノート総数（`total`）、当日作成されたノート数（`today`）、色別のノート数（`byColor`）を `StatsController` に渡す。
 
 起動時には JPA モデルからデータベースを作成する。`src/main/resources/data.sql` がダッシュボードに表示するサンプルノートを登録する。`spring.jpa.open-in-view=false` により、永続化層へのアクセスをサービス境界内に保つ。
 
@@ -79,6 +81,8 @@ Gradle Wrapper でアプリケーションを起動する。
 - Google Antigravity: Manager View から独立した3つの変更を委任する流れ
 - JetBrains Junie: Auto、Think、Brave の各モードで同じリファクタリングを比較する流れ
 
+1回の比較では4つのツールに同じモデルを使う。これにより、観察した差をモデルの変更ではなく、モデルを動かすツール側の実行基盤（エージェントハーネス）の差として比較できる。共通のベース課題では、複数ファイルの編集、データベーススキーマの変更、サービスの分割、Thymeleaf UI の変更、互換性を破る REST API の変更を扱う。
+
 スクリプトには、4つのツールで共通して行うお気に入り機能の課題と評価表も含まれる。そのまま使えるプロンプトは [DEMO.ko.md](DEMO.ko.md) または [DEMO.ja.md](DEMO.ja.md) にある。
 
 ## HTTP エンドポイント
@@ -86,21 +90,24 @@ Gradle Wrapper でアプリケーションを起動する。
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/` | ノートダッシュボードを描画 |
-| `GET` | `/notes/new` | ノート入力画面を描画 |
+| `GET` | `/notes/new` | ノート作成画面を描画 |
 | `POST` | `/notes` | ノートを作成してダッシュボードへ戻る |
 | `GET` | `/notes/{id}` | 1件のノートを描画 |
+| `POST` | `/notes/{id}/delete` | ノートを削除してダッシュボードへ戻る |
 | `GET` | `/api/notes` | すべてのノートを JSON で返す |
 | `GET` | `/api/notes/{id}` | 1件のノートを JSON で返す |
 | `POST` | `/api/notes` | JSON からノートを作成 |
 | `PUT` | `/api/notes/{id}` | JSON からノートを更新 |
 | `DELETE` | `/api/notes/{id}` | ノートを削除 |
-| `GET` | `/api/stats` | ノート数と単語数を返す |
+| `GET` | `/api/stats` | ノート数を `total`、`today`、`byColor` で返す |
 
 ## GitHub と Gitea
 
 ![リポジトリの役割](docs/svg/repository-roles.ja.svg)
 
-ソースリポジトリは `https://git.seonology.com/seon-labs/agentic-ide-demo` だ。GitHub の `https://github.com/seonNoh/agentic-ide-demo` は読み取り専用の push ミラーとして維持する。両方のリポジトリで `main` ブランチは現在コミット `b1dd56bc2045d54a4f1af43958753843e38be883` を指し、タグはない。
+ソースリポジトリは `https://git.seonology.com/seon-labs/agentic-ide-demo` だ。GitHub の `https://github.com/seonNoh/agentic-ide-demo` は、読み取り専用の push ミラーとして維持されている。push ミラーでは `sync_on_commit=true` が有効で、両リモートの `main` ブランチは現在同じ最新コミットを指している。GitHub から取得した最初のソース基準点は `b1dd56bc2045d54a4f1af43958753843e38be883` である。
+
+移行時点の GitHub は `workflows=0`、`runs=0`、`secrets=0`、`variables=0`、`environments=0` であり、両リポジトリとも `tags=0` だった。このリポジトリでは Gitea Actions を無効にしている。
 
 ## 運用
 
@@ -110,6 +117,9 @@ Gradle は Maven Central から宣言済みの依存関係を取得する。ア�
 
 - [DEMO.ko.md](DEMO.ko.md) — そのまま使える韓国語の発表用スクリプト
 - [DEMO.ja.md](DEMO.ja.md) — そのまま使える日本語の発表用スクリプト
+- [元の英語 README](docs/README.original.en.md) — バイト単位で保存した移行元の文書
+- [コントリビューションガイド](CONTRIBUTING.md) — 変更とレビューの手順
+- [Gitea Issues](https://git.seonology.com/seon-labs/agentic-ide-demo/issues) — 質問と問題の報告先
 - [Spring Boot documentation](https://docs.spring.io/spring-boot/)
 - [Kotlin documentation](https://kotlinlang.org/docs/home.html)
 - [Gradle Kotlin DSL documentation](https://docs.gradle.org/current/userguide/kotlin_dsl.html)

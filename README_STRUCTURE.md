@@ -6,7 +6,7 @@ The three README variants describe the same Kotlin and Spring Boot note applicat
 
 1. `Overview` / `개요` / `概要`: identify the note application and its comparison scope.
 2. `Repository layout` / `저장소 구조` / `リポジトリ構成`: show the actual Kotlin, resource, and test layout.
-3. `Quick start` / `빠른 시작` / `すぐに始める`: provide the exact Gitea clone and Gradle Wrapper commands.
+3. `Quick start` / `빠른 시작` / `すぐに始める`: state the Java 21 and Git prerequisites, then provide the exact Gitea clone and Gradle Wrapper commands.
 4. `Application structure` / `애플리케이션 구조` / `アプリケーション構成`: explain the controllers, services, repository, and database.
 5. `Demo scenarios` / `데모 시나리오` / `デモシナリオ`: summarize the four IDE workflows and source scripts.
 6. `HTTP endpoints` / `HTTP 엔드포인트` / `HTTP エンドポイント`: list the routes implemented by the controllers.
@@ -20,15 +20,21 @@ The three README variants describe the same Kotlin and Spring Boot note applicat
 - `README.ko.md` references `.ko.svg` variants and uses Korean plain-form prose.
 - `README.ja.md` references `.ja.svg` variants and uses Japanese 常体 prose.
 - The language switcher is the same independent paragraph immediately below each H1.
-- All three README files contain the same three fenced command blocks byte-for-byte.
+- All three README files contain the same four fenced code blocks byte-for-byte: one repository-layout block and three shell blocks.
 
 ## Repository-specific facts required
 
 - Gitea source URL: `https://git.seonology.com/seon-labs/agentic-ide-demo`
 - GitHub push mirror URL: `https://github.com/seonNoh/agentic-ide-demo`
 - Default branch: `main`
-- Source commit: `b1dd56bc2045d54a4f1af43958753843e38be883`
+- Original GitHub source baseline: `b1dd56bc2045d54a4f1af43958753843e38be883`; current repository tip: the commit referenced by `main`
 - Runtime/build baseline: Kotlin 1.9, Java 21, Spring Boot 3.5, Gradle Kotlin DSL
 - Persistence baseline: Spring Data JPA and H2 in-memory database
-- No workflow files, runs, secrets, variables, environments, or tags
+- Controller route set: 11 method/path pairs, including `POST /notes/{id}/delete`
+- Comparison control: all four tools use the same model so the comparison isolates differences in the agent harness
+- Shared base scope: multi-file editing, database schema changes, service splitting, Thymeleaf UI changes, and a breaking REST API change
+- Preserved source documentation: `docs/README.original.en.md`
+- Support path: `CONTRIBUTING.md` and Gitea Issues
+- GitHub capture facts: `workflows=0`, `runs=0`, `secrets=0`, `variables=0`, `environments=0`
+- GitHub and Gitea tag counts: `tags=0`
 - Gitea Actions disabled
