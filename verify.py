@@ -21,6 +21,16 @@ SVG_SPECS = {
     "demo-scenarios": ("960", "540", "ds"),
     "repository-roles": ("640", "420", "gd"),
 }
+LOCALIZED_DESCS = {
+    ("application-architecture", ".ko"): "브라우저가 Spring Boot 컨트롤러와 서비스를 거쳐 H2 노트 데이터베이스에 접근한다.",
+    ("application-architecture", ".ja"): "ブラウザから Spring Boot のコントローラとサービスを経由して H2 ノートデータベースへアクセスする。",
+    ("request-flow", ".ko"): "노트 요청이 컨트롤러, 서비스, 리포지토리, 응답을 차례로 거친다.",
+    ("request-flow", ".ja"): "ノートのリクエストがコントローラ、サービス、リポジトリ、レスポンスを順に通過する。",
+    ("demo-scenarios", ".ko"): "네 가지 IDE 작업 흐름이 하나의 노트 애플리케이션에서 실행된다.",
+    ("demo-scenarios", ".ja"): "4つの IDE ワークフローを同じノートアプリケーションで実行する。",
+    ("repository-roles", ".ko"): "Gitea가 소스 저장소이고 GitHub가 push 미러를 받는다.",
+    ("repository-roles", ".ja"): "Gitea がソースリポジトリで、GitHub が push ミラーを受け取る。",
+}
 TAILWIND = ("#0f172a", "#1e293b", "#38bdf8", "#a78bfa", "#f472b6", "#34d399", "#fbbf24")
 EMOJI = re.compile(r"[\U0001F000-\U0001FAFF\u2600-\u27BF]")
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
@@ -125,6 +135,14 @@ def check_svg() -> None:
                 fail(f"{name} contains attribution or emoji")
             if element_signature(root) != element_signature(english_root):
                 fail(f"{name} changed SVG structure or coordinates")
+            if suffix in (".ko", ".ja"):
+                desc_text = next((element.text or "" for element in root.iter() if element.tag.rsplit("}", 1)[-1] == "desc"), "")
+                if desc_text != LOCALIZED_DESCS[(stem, suffix)]:
+                    fail(f"{name} has an untranslated or unexpected localized desc")
+            if stem == "request-flow":
+                for identifier in ("NoteApiController", "NoteService", "NoteRepository"):
+                    if identifier not in text:
+                        fail(f"{name} lacks exact source identifier: {identifier}")
             if stem == "request-flow" and suffix == ".ko":
                 if "or form submit" in text or "Controller → service → repository keeps responsibilities explicit" in text:
                     fail(f"{name} retains untranslated English prose")

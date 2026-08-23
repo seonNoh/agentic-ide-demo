@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="aa-ko-title aa-ko-subtitle">
   <title id="aa-ko-title">에이전트형 IDE 데모 애플리케이션 구조</title>
-  <desc id="aa-ko-subtitle">A browser reaches Spring Boot controllers, services, and the H2 note database.</desc>
+  <desc id="aa-ko-subtitle">브라우저가 Spring Boot 컨트롤러와 서비스를 거쳐 H2 노트 데이터베이스에 접근한다.</desc>
   <style>
     .aa-ko-bg{fill:#0d1117}.aa-ko-card{fill:url(#aa-ko-s);stroke:#252d38;stroke-width:1}.aa-ko-lead{fill:url(#aa-ko-sl);stroke:#33404f;stroke-width:1}.aa-ko-inner{fill:#1e2530;stroke:#252d38;stroke-width:1}.aa-ko-text{font:600 16px Pretendard,system-ui,sans-serif;fill:#f0f6fc}.aa-ko-sub{font:400 11.5px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-ko-name{font:500 13px Pretendard,system-ui,sans-serif;fill:#c3ccd6}.aa-ko-label{font:400 11px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-ko-value{font:400 10.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#69717a}.aa-ko-badge{font:400 9.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#7c9fff}.aa-ko-flow{fill:none;stroke:#7c9fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 6;animation:aa-ko-dash 2s linear infinite}.aa-ko-top{stroke:rgba(255,255,255,.05);stroke-width:1}.aa-ko-glow{filter:url(#aa-ko-gl)}
     @keyframes aa-ko-dash{to{stroke-dashoffset:-22}}@media (prefers-reduced-motion:reduce){.aa-ko-flow{animation:none}}

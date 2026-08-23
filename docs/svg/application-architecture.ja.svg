@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="aa-ja-title aa-ja-subtitle">
   <title id="aa-ja-title">Agentic IDE デモアプリケーション構成</title>
-  <desc id="aa-ja-subtitle">A browser reaches Spring Boot controllers, services, and the H2 note database.</desc>
+  <desc id="aa-ja-subtitle">ブラウザから Spring Boot のコントローラとサービスを経由して H2 ノートデータベースへアクセスする。</desc>
   <style>
     .aa-ja-bg{fill:#0d1117}.aa-ja-card{fill:url(#aa-ja-s);stroke:#252d38;stroke-width:1}.aa-ja-lead{fill:url(#aa-ja-sl);stroke:#33404f;stroke-width:1}.aa-ja-inner{fill:#1e2530;stroke:#252d38;stroke-width:1}.aa-ja-text{font:600 16px Pretendard,system-ui,sans-serif;fill:#f0f6fc}.aa-ja-sub{font:400 11.5px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-ja-name{font:500 13px Pretendard,system-ui,sans-serif;fill:#c3ccd6}.aa-ja-label{font:400 11px Pretendard,system-ui,sans-serif;fill:#939da8}.aa-ja-value{font:400 10.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#69717a}.aa-ja-badge{font:400 9.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#7c9fff}.aa-ja-flow{fill:none;stroke:#7c9fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 6;animation:aa-ja-dash 2s linear infinite}.aa-ja-top{stroke:rgba(255,255,255,.05);stroke-width:1}.aa-ja-glow{filter:url(#aa-ja-gl)}
     @keyframes aa-ja-dash{to{stroke-dashoffset:-22}}@media (prefers-reduced-motion:reduce){.aa-ja-flow{animation:none}}
