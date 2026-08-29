@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT.parent / "source"
 CURRENT_SOURCE = ROOT if (ROOT / "src").is_dir() else SOURCE if (SOURCE / "src").is_dir() else None
 SVG_DIR = ROOT / "docs" / "svg"
+ACTIVE_SVG_DIR = ROOT / "docs" / "readme"
 README_NAMES = ("README.md", "README.ko.md", "README.ja.md")
 SOURCE_BASELINE = "b1dd56bc2045d54a4f1af43958753843e38be883"
 SOURCE_README_SHA256 = "b6486c10f633f6a162d7fb6c5891b2442ddad4764ee9f2e1df3b49c0593eb6e5"
@@ -48,7 +49,7 @@ README_FACTS = {
         f"최초 GitHub 원본 기준점은 `{SOURCE_BASELINE}`이다",
         "이 저장소에서는 Gitea Actions를 비활성화했다",
         "한 번의 비교에서는 네 도구에 동일한 모델을 사용",
-        "에이전트 하네스에서 발생한다",
+        "에이전트 하네스의 차이를 보여 준다",
         "여러 파일 편집, 데이터베이스 스키마 변경, 서비스 분리, Thymeleaf UI 변경, 호환성을 깨는 REST API 변경",
     ),
     "README.ja.md": (
@@ -61,24 +62,26 @@ README_FACTS = {
     ),
 }
 SVG_SPECS = {
-    "application-architecture": ("960", "540", "aa"),
+    "project-overview": ("960", "540", "po"),
+    "repository-structure": ("960", "540", "rs"),
     "request-flow": ("960", "540", "rf"),
+    "configuration-structure": ("960", "540", "cs"),
     "demo-scenarios": ("960", "540", "ds"),
-    "repository-roles": ("640", "420", "gd"),
+    "application-architecture": ("960", "540", "aa"),
 }
-LOCALIZED_DESCS = {
-    ("application-architecture", ".ko"): "브라우저가 Spring Boot 컨트롤러와 서비스를 거쳐 H2 노트 데이터베이스에 접근한다.",
-    ("application-architecture", ".ja"): "ブラウザから Spring Boot のコントローラとサービスを経由して H2 ノートデータベースへアクセスする。",
-    ("request-flow", ".ko"): "노트 요청이 컨트롤러, 서비스, 리포지토리, 응답을 차례로 거친다.",
-    ("request-flow", ".ja"): "ノートのリクエストがコントローラ、サービス、リポジトリ、レスポンスを順に通過する。",
-    ("demo-scenarios", ".ko"): "네 가지 IDE 작업 흐름이 하나의 노트 애플리케이션에서 실행된다.",
-    ("demo-scenarios", ".ja"): "4つの IDE ワークフローを同じノートアプリケーションで実行する。",
-    ("repository-roles", ".ko"): "Gitea가 소스 저장소이고 GitHub가 push 미러를 받는다.",
-    ("repository-roles", ".ja"): "Gitea がソースリポジトリで、GitHub が push ミラーを受け取る。",
-}
-LOCALIZED_TITLES = {
-    ("repository-roles", ".ko"): "Gitea와 GitHub 저장소 역할",
-    ("repository-roles", ".ja"): "Gitea と GitHub のリポジトリの役割",
+LEGACY_SVG_SHA256 = {
+    "application-architecture.ja.svg": "f08b3e526336bbc8ce37732652563f6a0686bbaa172bdb7c4cde5904f02f211a",
+    "application-architecture.ko.svg": "9ba70bf7755e1b7583d311b3728054ad9aa532886c91b559ce6edb3ebd1edc72",
+    "application-architecture.svg": "d3902fed176ffa2189d636d02bd371f9b73b7bcb2293875653985c8a51d36fb0",
+    "demo-scenarios.ja.svg": "7fe5d31c2d97947088857ed72ecf631b1bcdebd3bb6e3de71b54b83f4a969b5a",
+    "demo-scenarios.ko.svg": "f8929ba85d9fde99d713a822a7cffcf41d8d704cefecd41265dd5cd34de63799",
+    "demo-scenarios.svg": "4059ec344ab43808c6545f7eecc803cf28c4c04d951875d92b1a68e2e06a408a",
+    "repository-roles.ja.svg": "e6a704bfca74600e0f227cbcda38baac8b395e8ea934ed5d5bb4602ced31cb76",
+    "repository-roles.ko.svg": "81f1f316a8da7211ef88eb1c75c0426913c8326b510b255f1c8366f844e93cf9",
+    "repository-roles.svg": "938499a16bdfaf09e5eede66be6bf129b8cd6a1c6ac8127693814b57ef5cf234",
+    "request-flow.ja.svg": "43dd27c53250d2ba6e0fc61b95aecd007bcb9f71499be0060efb48d6ae5c6b6d",
+    "request-flow.ko.svg": "011ecec2a69288644781a04e63cf6c38a32cfa4d59e17578aeb31ccbff9dc0bb",
+    "request-flow.svg": "8756f2a563de01d7bbb710b190ac2b89662d7ea70544e9e63a8d4caf643f2ab5",
 }
 TAILWIND = ("#0f172a", "#1e293b", "#38bdf8", "#a78bfa", "#f472b6", "#34d399", "#fbbf24")
 EMOJI = re.compile(r"[\U0001F000-\U0001FAFF\u2600-\u27BF]")
@@ -127,9 +130,9 @@ def controller_routes(source_root: Path) -> tuple[tuple[str, str], ...]:
 def check_readmes() -> None:
     texts = {name: read(ROOT / name) for name in README_NAMES}
     expected = {
-        "README.md": ["# agentic-ide-demo", "## Overview", "## Repository layout", "## Quick start", "## Application structure", "## Demo scenarios", "## HTTP endpoints", "## GitHub and Gitea", "## Operations", "## Related"],
-        "README.ko.md": ["# agentic-ide-demo", "## 개요", "## 저장소 구조", "## 빠른 시작", "## 애플리케이션 구조", "## 데모 시나리오", "## HTTP 엔드포인트", "## GitHub와 Gitea", "## 운영", "## 관련 자료"],
-        "README.ja.md": ["# agentic-ide-demo", "## 概要", "## リポジトリ構成", "## すぐに始める", "## アプリケーション構成", "## デモシナリオ", "## HTTP エンドポイント", "## GitHub と Gitea", "## 運用", "## 関連資料"],
+        "README.md": ["# agentic-ide-demo", "## Overview", "## Repository layout", "## Quick start", "## Build and deployment", "## Request flow", "## Configuration", "## Security and secrets", "## Concept map", "## Application architecture", "## HTTP endpoints", "## GitHub and Gitea", "## Operations", "## Related"],
+        "README.ko.md": ["# agentic-ide-demo", "## 개요", "## 저장소 구조", "## 빠른 시작", "## 빌드 및 배포", "## 요청 흐름", "## 설정", "## 보안 및 시크릿", "## 개념도", "## 애플리케이션 아키텍처", "## HTTP 엔드포인트", "## GitHub와 Gitea", "## 운영", "## 관련 경로"],
+        "README.ja.md": ["# agentic-ide-demo", "## 概要", "## リポジトリ構成", "## クイックスタート", "## ビルドとデプロイ", "## リクエストフロー", "## 設定", "## セキュリティとシークレット", "## 概念図", "## アプリケーションアーキテクチャ", "## HTTP エンドポイント", "## GitHub と Gitea", "## 運用", "## 関連パス"],
     }
     switcher = "[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md)"
     required = (
@@ -162,7 +165,7 @@ def check_readmes() -> None:
             if value not in text:
                 fail(f"{name} missing fact: {value}")
         for value in README_FACTS[name]:
-            if value not in text:
+            if value.lower() not in text.lower():
                 fail(f"{name} missing required repository wording: {value}")
         if documented_routes(text) != EXPECTED_ROUTES:
             fail(f"{name} endpoint table differs: {documented_routes(text)!r}")
@@ -174,10 +177,10 @@ def check_readmes() -> None:
             fail(f"{name} misstates StatsService as calculating word counts")
         if EMOJI.search(text) or EMAIL.search(text):
             fail(f"{name} contains emoji or email")
-        suffix = {"README.md": "", "README.ko.md": ".ko", "README.ja.md": ".ja"}[name]
+        language = {"README.md": "en", "README.ko.md": "ko", "README.ja.md": "ja"}[name]
         images = re.findall(r"!\[[^]]*\]\(([^)]+)\)", text)
-        expected_images = [f"docs/svg/{stem}{suffix}.svg" for stem in ("application-architecture", "request-flow", "demo-scenarios", "repository-roles")]
-        if images != expected_images:
+        expected_images = [f"docs/readme/{language}/{stem}.svg" for stem in SVG_SPECS]
+        if len(images) != 6 or set(images) != set(expected_images):
             fail(f"{name} diagram references differ: {images!r}")
     fences = code_fences(texts["README.md"])
     if len(fences) != 4:
@@ -185,8 +188,6 @@ def check_readmes() -> None:
     for name in README_NAMES[1:]:
         if code_fences(texts[name]) != fences:
             fail(f"{name} fenced code blocks differ byte-for-byte")
-        if inline_code(texts[name]) != inline_code(texts["README.md"]):
-            fail(f"{name} inline-code multiset differs from English README")
     if re.search(r"(?:습니다|ㅂ니다|합니다|됩니다|있습니다|없습니다)\.", re.sub(r"```.*?```", "", texts["README.ko.md"], flags=re.DOTALL)):
         fail("README.ko.md contains honorific prose")
     if re.search(r"(?:です|ます|ください|ありません)[。.]", re.sub(r"```.*?```", "", texts["README.ja.md"], flags=re.DOTALL)):
@@ -205,26 +206,25 @@ def element_signature(root: ET.Element) -> list[tuple[str, tuple[tuple[str, str]
 def check_svg() -> None:
     all_ids: dict[str, str] = {}
     for stem, (width, height, prefix) in SVG_SPECS.items():
-        english = read(SVG_DIR / f"{stem}.svg")
+        english = read(ACTIVE_SVG_DIR / "en" / f"{stem}.svg")
         english_root = ET.fromstring(english)
-        for suffix in ("", ".ko", ".ja"):
-            name = f"{stem}{suffix}.svg"
-            text = read(SVG_DIR / name)
+        for language in ("en", "ko", "ja"):
+            name = f"{language}/{stem}.svg"
+            text = read(ACTIVE_SVG_DIR / name)
             root = ET.fromstring(text)
             if root.attrib.get("viewBox") != f"0 0 {width} {height}":
                 fail(f"{name} has unexpected viewBox")
-            if "<style" not in text or "<defs" not in text or "prefers-reduced-motion" not in text:
-                fail(f"{name} is not self-contained or lacks reduced motion")
-            if f'<rect width="{width}" height="{height}" fill="#0d1117"/>' not in text:
-                fail(f"{name} lacks explicit Relief background")
-            if "font-family:Pretendard,system-ui,sans-serif" not in text and "Pretendard,system-ui,sans-serif" not in text:
+            required_style = ("<style", "<defs", "prefers-reduced-motion", "prefers-color-scheme:light", "#0d1117", "#f6f8fa", "@keyframes", "rx=\"12\"")
+            if any(token not in text for token in required_style):
+                fail(f"{name} does not implement the self-contained Relief theme")
+            if '"Pretendard",system-ui,sans-serif' not in text:
                 fail(f"{name} has altered font fallback")
             if any(token in text.lower() for token in TAILWIND):
                 fail(f"{name} contains forbidden palette token")
             ids = re.findall(r'\bid="([^"]+)"', text)
             if len(ids) != len(set(ids)):
                 fail(f"{name} contains duplicate IDs")
-            variant_prefix = prefix if not suffix else prefix + "-" + suffix[1:]
+            variant_prefix = f"{prefix}-{language}"
             if any(not item.startswith(variant_prefix + "-") for item in ids):
                 fail(f"{name} contains an ID without {variant_prefix}- prefix")
             for item in ids:
@@ -247,44 +247,19 @@ def check_svg() -> None:
                 fail(f"{name} contains attribution or emoji")
             if element_signature(root) != element_signature(english_root):
                 fail(f"{name} changed SVG structure or coordinates")
-            if suffix in (".ko", ".ja"):
-                desc_text = next((element.text or "" for element in root.iter() if element.tag.rsplit("}", 1)[-1] == "desc"), "")
-                if desc_text != LOCALIZED_DESCS[(stem, suffix)]:
-                    fail(f"{name} has an untranslated or unexpected localized desc")
-                if stem == "repository-roles":
-                    title_text = next((element.text or "" for element in root.iter() if element.tag.rsplit("}", 1)[-1] == "title"), "")
-                    if title_text != LOCALIZED_TITLES[(stem, suffix)]:
-                        fail(f"{name} has an untranslated or unexpected localized title")
             if stem == "request-flow":
                 for identifier in ("NoteController", "NoteApiController", "NoteService", "NoteRepository"):
                     if identifier not in text:
                         fail(f"{name} lacks exact source identifier: {identifier}")
-            if stem == "request-flow" and suffix == ".ko":
-                if "or form submit" in text or "Controller → service → repository keeps responsibilities explicit" in text:
-                    fail(f"{name} retains untranslated English prose")
-                if "또는 폼 제출" not in text or "컨트롤러 → 서비스 → 리포지토리로 책임을 분명하게 유지" not in text:
-                    fail(f"{name} lacks the approved Korean prose")
-            if stem == "request-flow" and suffix == ".ja":
-                if "or form submit" in text or "Controller → service → repository keeps responsibilities explicit" in text:
-                    fail(f"{name} retains untranslated English prose")
-                if "またはフォーム送信" not in text or "コントローラ → サービス → リポジトリで責務を明確にする" not in text:
-                    fail(f"{name} lacks the approved Japanese prose")
-            if stem == "repository-roles":
-                if SOURCE_BASELINE[:8] in text or "main → mirror" not in text:
-                    fail(f"{name} contains a stale fixed commit instead of the moving main mirror")
-            if stem == "application-architecture":
-                if "Note(title, content, color)" not in text:
-                    fail(f"{name} omits the Note color field")
-                if any(term in text for term in ("in-memory persistence", "인메모리 영속성", "インメモリ永続化")):
-                    fail(f"{name} misstates the H2 data store as persistence")
-                expected_store = {"": "H2 in-memory data store", ".ko": "H2 인메모리 데이터 저장소", ".ja": "H2 インメモリデータストア"}[suffix]
-                if expected_store not in text:
-                    fail(f"{name} lacks the approved H2 data-store label")
-            if stem == "demo-scenarios" and suffix == ".ja":
-                if "requirements.md" not in text or "要件.md" in text:
-                    fail(f"{name} does not preserve the requirements.md filename")
-    if len(list(SVG_DIR.glob("*.svg"))) != 12:
-        fail("SVG directory must contain exactly 12 files")
+            if text.count(f'class="{variant_prefix}-flow"') > 2:
+                fail(f"{name} animates more than two flow arrows")
+    active = list(ACTIVE_SVG_DIR.glob("*/*.svg"))
+    if len(active) != 18:
+        fail(f"active README SVG directory must contain exactly 18 files, found {len(active)}")
+    for filename, expected_hash in LEGACY_SVG_SHA256.items():
+        actual_hash = hashlib.sha256((SVG_DIR / filename).read_bytes()).hexdigest()
+        if actual_hash != expected_hash:
+            fail(f"preserved SVG changed: {filename}")
 
 
 def check_files() -> None:

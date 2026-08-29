@@ -4,13 +4,15 @@
 
 ## Overview
 
-`agentic-ide-demo` is a small Kotlin and Spring Boot application for comparing four agentic IDEs against the same Java Virtual Machine (JVM) codebase. It models a note service with a Thymeleaf dashboard, a JSON API, an H2 in-memory database, and a statistics endpoint. The repository also contains the presentation scripts used to run the comparison scenarios.
+`agentic-ide-demo` is a deliberately small Kotlin and Spring Boot note application for comparing four agentic IDE workflows on one stable JVM codebase. A Thymeleaf dashboard and JSON API share the same note domain, services, Spring Data JPA repository, H2 database, and tests. This keeps the application constant while Kiro, GitHub Copilot in VS Code, Google Antigravity, and JetBrains Junie exercise different agent harnesses.
 
-The application uses Kotlin 1.9, Java 21, Spring Boot 3.5, Spring Data JPA, Thymeleaf, H2, Gradle Kotlin DSL, and JUnit 5. The four comparison targets are Kiro, GitHub Copilot in VS Code, Google Antigravity, and JetBrains Junie.
+The verified build uses Kotlin 1.9.25, Java 21, Spring Boot 3.5.6, Gradle Kotlin DSL, Thymeleaf, Spring Data JPA, H2, Bean Validation, and JUnit 5.
 
-![Application architecture](docs/svg/application-architecture.svg)
+![Project overview](docs/readme/en/project-overview.svg)
 
 ## Repository layout
+
+![Repository structure](docs/readme/en/repository-structure.svg)
 
 ```text
 src/main/kotlin/com/seonology/demo/
@@ -26,9 +28,11 @@ src/test/kotlin/com/seonology/demo/
   note/  # REST and service tests
 ```
 
+Repository-level operating metadata lives in `.gitea/`, `gitea-settings.json`, and `apply-gitea-settings.sh`. The three root READMEs are the operating entry points; the presentation prompts remain in `DEMO.ko.md` and `DEMO.ja.md`. The pre-migration English document is preserved byte-for-byte at `docs/README.original.en.md`, and `README_STRUCTURE.md` records the documentation contract.
+
 ## Quick start
 
-Java 21 and Git are required. Confirm both tools, then clone the repository and enter the working tree.
+Java 21 and Git are required. The application uses the Gradle Wrapper, so a separate Gradle installation is not required.
 
 ```bash
 java -version
@@ -37,42 +41,70 @@ git clone https://git.seonology.com/seon-labs/agentic-ide-demo.git
 cd agentic-ide-demo
 ```
 
-Start the application with the Gradle Wrapper.
+Start the local application:
 
 ```bash
 ./gradlew bootRun
 ```
 
-Run the automated tests.
+Open `http://localhost:8090/`. The note form is at `/notes/new`, the REST collection at `/api/notes`, the statistics response at `/api/stats`, and the H2 console at `/h2-console`.
+
+## Build and deployment
+
+Run the test suite before producing an executable archive:
 
 ```bash
 ./gradlew test
+./gradlew clean bootJar
+java -jar build/libs/agentic-ide-demo-0.0.1-SNAPSHOT.jar
 ```
 
-The server listens on `http://localhost:8090`. The dashboard is available at `/`, note creation at `/notes/new`, the REST collection at `/api/notes`, statistics at `/api/stats`, and the H2 console at `/h2-console` with JDBC URL `jdbc:h2:mem:notes`.
+The repository has no container image, infrastructure manifest, hosted-environment profile, or automated deployment workflow. `bootRun` and the executable Spring Boot JAR both start one local process on port `8090`; publishing that process is outside this repository's scope.
 
-## Application structure
+## Request flow
 
-![Request flow](docs/svg/request-flow.svg)
+![Note request flow](docs/readme/en/request-flow.svg)
 
-`AgenticIdeDemoApplication` starts Spring Boot. `NoteService` owns note creation, lookup, update, and deletion through `NoteRepository`. `NoteController` renders Thymeleaf pages, while `NoteApiController` exposes JSON endpoints. `StatsService` returns the total note count (`total`), notes created today (`today`), and counts grouped by color (`byColor`) to `StatsController`.
+`NoteController` accepts the HTML form routes and returns Thymeleaf view names. `NoteApiController` validates JSON bodies and returns `NoteResponse` objects. Both call `NoteService`, whose read methods run in a read-only transaction and whose create, update, and delete methods open write transactions. `NoteRepository` provides the JPA boundary to H2. `StatsController` separately calls `StatsService`, which reads the same repository and returns `total`, `today`, and `byColor`.
 
-The database is created from the JPA model at startup. `src/main/resources/data.sql` supplies the sample notes that appear in the dashboard. `spring.jpa.open-in-view=false` keeps persistence access inside the service boundary.
+## Configuration
 
-## Demo scenarios
+![Runtime configuration structure](docs/readme/en/configuration-structure.svg)
 
-![IDE comparison scenarios](docs/svg/demo-scenarios.svg)
+`src/main/resources/application.properties` is the only runtime configuration file; the repository defines no profiles or environment-variable overrides.
 
-The scripts use the same application to compare four workflows:
+| Key | Repository default | Effect |
+| --- | --- | --- |
+| `spring.application.name` | `agentic-ide-demo` | Names the Spring application |
+| `spring.datasource.url` | `jdbc:h2:mem:notes;MODE=PostgreSQL;DB_CLOSE_DELAY=-1` | Creates an in-memory H2 database with PostgreSQL compatibility |
+| `spring.datasource.driver-class-name` | `org.h2.Driver` | Selects the H2 JDBC driver |
+| `spring.datasource.username` | `sa` | Sets the local database user |
+| `spring.datasource.password` | empty | Leaves the local H2 password unset |
+| `spring.jpa.hibernate.ddl-auto` | `create-drop` | Recreates and removes the schema with the process lifecycle |
+| `spring.jpa.open-in-view` | `false` | Keeps persistence access outside view rendering |
+| `spring.jpa.defer-datasource-initialization` | `true` | Creates the JPA schema before loading seed SQL |
+| `spring.h2.console.enabled` | `true` | Enables the H2 browser console |
+| `spring.h2.console.path` | `/h2-console` | Sets the console path |
+| `spring.sql.init.mode` | `always` | Loads `data.sql` at startup |
+| `server.port` | `8090` | Sets the HTTP listener port |
 
-- Kiro: specification-driven work for a tag feature.
-- GitHub Copilot: Agent mode, Inline, Next Edit Suggestions, and Cloud agent in one task.
-- Google Antigravity: three independent changes delegated through Manager View.
-- JetBrains Junie: the same refactoring task in Auto, Think, and Brave modes.
+## Security and secrets
 
-All four tools use the same model during a comparison run, so the observed differences reflect the agent harness rather than a model change. The shared base exercises multi-file editing, a database schema change, service splitting, a Thymeleaf UI change, and a breaking REST API change.
+The application has no authentication or authorization dependency. Its HTML routes, JSON API, and H2 console are therefore suitable only for a trusted local demo environment. The templates load Tailwind CSS from `https://cdn.tailwindcss.com`, so the UI also depends on that external script at runtime.
 
-The scripts also define a shared favorite-feature exercise and a small evaluation sheet. Read [DEMO.ko.md](DEMO.ko.md) or [DEMO.ja.md](DEMO.ja.md) for the copy-ready prompts.
+No application secret value is committed. `spring.datasource.password` is an intentionally empty local H2 setting. `apply-gitea-settings.sh` requires the secret name `TOK` at execution time and exits if it is absent; do not write its value into the repository or command history. Live inspection found no Gitea Actions secrets or variables and no GitHub Actions secrets or variables. Actions are disabled on Gitea, and no workflow exists on either remote.
+
+## Concept map
+
+![Agentic IDE comparison concept](docs/readme/en/demo-scenarios.svg)
+
+All four tools use the same model during a comparison run, so the result isolates the agent harness rather than a model change. Kiro exercises a specification-driven tag feature, Copilot combines four interaction modes, Antigravity delegates independent tasks, and Junie compares three JVM-native operating modes. The shared base covers multi-file editing, a database schema change, service splitting, a Thymeleaf UI change, and a breaking REST API change. The two `DEMO` documents contain the copy-ready prompts and evaluation sheet.
+
+## Application architecture
+
+![Application architecture](docs/readme/en/application-architecture.svg)
+
+`AgenticIdeDemoApplication` starts one Spring Boot process. The web adapters call `NoteService` or `StatsService`; `NoteService` writes through `NoteRepository`, while `StatsService` derives counts from the same notes. JPA builds the `notes` table from `Note`, and `data.sql` inserts six sample rows after schema creation. Because the database is in memory and the schema mode is `create-drop`, restarting the process resets the data.
 
 ## HTTP endpoints
 
@@ -80,35 +112,34 @@ The scripts also define a shared favorite-feature exercise and a small evaluatio
 | --- | --- | --- |
 | `GET` | `/` | Render the note dashboard |
 | `GET` | `/notes/new` | Render the note form |
-| `POST` | `/notes` | Create a note and return to the dashboard |
+| `POST` | `/notes` | Create a note and redirect to the dashboard |
 | `GET` | `/notes/{id}` | Render one note |
-| `POST` | `/notes/{id}/delete` | Delete a note and return to the dashboard |
+| `POST` | `/notes/{id}/delete` | Delete a note and redirect to the dashboard |
 | `GET` | `/api/notes` | Return all notes as JSON |
 | `GET` | `/api/notes/{id}` | Return one note as JSON |
 | `POST` | `/api/notes` | Create a note from JSON |
 | `PUT` | `/api/notes/{id}` | Update a note from JSON |
 | `DELETE` | `/api/notes/{id}` | Delete a note |
-| `GET` | `/api/stats` | Return `total`, `today`, and `byColor` note counts |
+| `GET` | `/api/stats` | Return `total`, `today`, and `byColor` counts |
 
 ## GitHub and Gitea
 
-![Repository roles](docs/svg/repository-roles.svg)
+The working source is `https://git.seonology.com/seon-labs/agentic-ide-demo` on `main`. Gitea sends a push mirror to `https://github.com/seonNoh/agentic-ide-demo` with `sync_on_commit=true` and an eight-hour fallback interval. The `main` branches on both remotes point to the same current commit. The initial GitHub source baseline was `b1dd56bc2045d54a4f1af43958753843e38be883`.
 
-The source repository is `https://git.seonology.com/seon-labs/agentic-ide-demo`. GitHub remains available at `https://github.com/seonNoh/agentic-ide-demo` as the read-only push mirror. The push mirror uses `sync_on_commit=true`, and the `main` branches on both remotes point to the same current commit. The initial GitHub source baseline was `b1dd56bc2045d54a4f1af43958753843e38be883`.
-
-At migration capture, GitHub reported `workflows=0`, `runs=0`, `secrets=0`, `variables=0`, and `environments=0`; both repositories had `tags=0`. Gitea Actions is disabled for this repository.
+Live inspection found no branch protection or Gitea Actions runs, runners, secrets, or variables. GitHub reported `workflows=0`, `runs=0`, `secrets=0`, `variables=0`, and `environments=0`; both remotes had `tags=0`. Gitea Actions is disabled for this repository. Do not start either provider's Actions while maintaining this documentation.
 
 ## Operations
 
-Gradle resolves the declared dependencies from Maven Central. The application uses an in-memory H2 database, so restarting the process restores the seed data. Stop a running server with `Ctrl+C`, then use `./gradlew test` before sharing a change.
+Use `./gradlew test` as the change gate. If port `8090` is occupied, stop the conflicting process or explicitly provide a temporary Spring property when running locally. Stop the application with `Ctrl+C`. A restart restores the six seed notes and discards notes created during the previous process.
 
 ## Related
 
-- [DEMO.ko.md](DEMO.ko.md) — copy-ready Korean presentation script.
-- [DEMO.ja.md](DEMO.ja.md) — copy-ready Japanese presentation script.
-- [Original English README](docs/README.original.en.md) — byte-preserved source documentation.
-- [Contributing guide](CONTRIBUTING.md) — contribution and review process.
-- [Gitea Issues](https://git.seonology.com/seon-labs/agentic-ide-demo/issues) — questions and problem reports.
+- [Korean demo script](DEMO.ko.md): copy-ready comparison prompts and the scoring sheet.
+- [Japanese demo script](DEMO.ja.md): the same presentation workflow localized for Japanese readers.
+- [Original English README](docs/README.original.en.md): byte-preserved source documentation.
+- [README structure contract](README_STRUCTURE.md): section, fact, and diagram mapping.
+- [Contributing guide](CONTRIBUTING.md): contribution and review expectations.
+- [Gitea Issues](https://git.seonology.com/seon-labs/agentic-ide-demo/issues): questions and defect reports.
 - [Spring Boot documentation](https://docs.spring.io/spring-boot/)
 - [Kotlin documentation](https://kotlinlang.org/docs/home.html)
 - [Gradle Kotlin DSL documentation](https://docs.gradle.org/current/userguide/kotlin_dsl.html)
